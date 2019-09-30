@@ -1,4 +1,4 @@
-package com.company;
+package com.imageprocessing;
 
 import java.awt.*;
 

@@ -1,4 +1,4 @@
-package com.company;
+package com.imageprocessing;
 
 import javax.imageio.ImageIO;
 
@@ -16,6 +16,7 @@ public class ImageProcess {
      * it provides useful operations on pixels
      */
     private BufferedImage new_image;
+    private BufferedImage current_image;
 
     /**
      * Basic class constructor it takes a path of image file,
@@ -28,7 +29,8 @@ public class ImageProcess {
             /**
              * creating new BufferedImage variable
              * */
-            new_image = ImageIO.read(input);
+            current_image = ImageIO.read(input);
+            new_image = new BufferedImage(current_image.getWidth(), current_image.getHeight(), BufferedImage.TYPE_INT_RGB);
         }
         catch (IOException e){
             System.err.println("Something went wrong with reading a file...\n");
@@ -82,7 +84,7 @@ public class ImageProcess {
         Color color;
         for(int i = 0; i < new_image.getWidth(); i++){
             for(int j = 0; j < new_image.getHeight(); j++){
-                color = new Color(new_image.getRGB(i, j)); // creating color object, which gathers pixel information
+                color = new Color(current_image.getRGB(i, j)); // creating color object, which gathers pixel information
                 new_image.setRGB(i, j, f.colorProcess(color).getRGB());
             }
         }
@@ -140,13 +142,16 @@ public class ImageProcess {
      * @param c - value of toning
      */
     public void printToning(int c){
-        if(c >= 20 && c <= 40) {
+        if( c <= 40) {
+            BufferedImage temp = current_image;
             greyScale();
+            current_image = new_image;
             process(x -> new Color(
                     (x.getRed() + 2 * c < 0) ? 0 : Math.min(x.getRed() + 2 * c, 255), // checking if value is out of 0-255 range
                     (x.getGreen() + c < 0) ? 0 : Math.min(x.getGreen() + c, 255),
                     x.getBlue()
             ));
+            current_image = temp;
         }
         else
             System.out.println("Value of filter needs to be from 20 to 40!");
@@ -173,6 +178,12 @@ public class ImageProcess {
         catch (IOException e){
             System.err.println("Something went wrong with creating a new image file...");
         }
+    }
+    public BufferedImage getOriginalImage(){
+        return current_image;
+    }
+    public BufferedImage getProcessedImage(){
+        return new_image;
     }
 
 
