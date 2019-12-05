@@ -1,3 +1,3 @@
 # imageProcessingApp
 
-Check wiki tab
+#Check wiki tab to see an overview of the application
